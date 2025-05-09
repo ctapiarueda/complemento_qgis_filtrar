@@ -5,7 +5,8 @@ from qgis.core import (
     QgsProcessingParameterDateTime,
     QgsProcessingParameterFeatureSink,
     QgsFeatureSink,
-    QgsFeature
+    QgsFeature,
+    QgsProject
 )
 from datetime import datetime
 
@@ -36,9 +37,6 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
                      '9deJulio','Albardón','Angaco','San Martín','Caucete','25 de Mayo', 'Sarmiento','Calingasta','Iglesia','Jáchal','Valle Fértil']  # DepId: 1, 2, 3
 
     def initAlgorithm(self, config=None):
-        self.addParameter(
-            QgsProcessingParameterFeatureSource(self.INPUT, 'Capa de entrada')
-        )
 
         self.addParameter(
             QgsProcessingParameterDateTime(
@@ -79,7 +77,10 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         )
 
     def processAlgorithm(self, parameters, context, feedback):
-        capa = self.parameterAsSource(parameters, self.INPUT, context)
+        layers = QgsProject.instance().mapLayersByName('vw_gra_RecReclamos_Agua')
+        if not layers:
+          raise QgsProcessingException("La capa 'reclamos_agua' no está cargada en el proyecto.")
+        capa = layers[0]
 
         indices_motivos = self.parameterAsEnums(parameters, self.VALORES, context)
         valores_filtrados = [self.opciones[i] for i in indices_motivos]
@@ -124,10 +125,10 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         return {self.OUTPUT: output_id}
 
     def name(self):
-        return 'filtro_por_smonombre_fecha_y_departamentos'
+        return 'filtro_reclamos_agua'
 
     def displayName(self):
-        return 'Filtrar por SmoNombre, Fecha y Departamentos (multiselección)'
+        return 'Filtrar Reclamos de Agua - OSSE'
 
     def group(self):
         return 'Scripts personalizados'
@@ -136,8 +137,8 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         return 'mis_scripts'
 
     def shortHelpString(self):
-        return 'Filtra una capa por motivos (SmoNombre), fechas (solo fecha, sin hora) y múltiples departamentos (DepId).'
+        return 'Filtra los reclamos de Agua por Motivo/s (SmoNombre), Fecha desde (sin hora)(FechaRecibido), Fecha hasta (sin hora)(FechaRecibido) y  Departamento/s de San Juan (DepId). Realizado en OSSE- Departamento TIC- Área Sistemas- Sector SIG por Carlos Tapia '
+        
 
     def createInstance(self):
         return FiltroPorSmoNombreFechaYDepartamentos()
-
