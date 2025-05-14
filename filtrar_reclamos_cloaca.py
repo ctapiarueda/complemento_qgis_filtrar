@@ -5,7 +5,8 @@ from qgis.core import (
     QgsProcessingParameterDateTime,
     QgsProcessingParameterFeatureSink,
     QgsFeatureSink,
-    QgsFeature
+    QgsFeature,
+    QgsProject
 )
 from datetime import datetime
 
@@ -28,9 +29,6 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
                      '9deJulio','Albardón','Angaco','San Martín','Caucete','25 de Mayo', 'Sarmiento','Calingasta','Iglesia','Jáchal','Valle Fértil']  # DepId: 1, 2, 3
 
     def initAlgorithm(self, config=None):
-        self.addParameter(
-            QgsProcessingParameterFeatureSource(self.INPUT, 'Capa de entrada')
-        )
 
         self.addParameter(
             QgsProcessingParameterDateTime(
@@ -71,8 +69,11 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         )
 
     def processAlgorithm(self, parameters, context, feedback):
-        capa = self.parameterAsSource(parameters, self.INPUT, context)
-
+        layers = QgsProject.instance().mapLayersByName('vw_gra_RecReclamos_Cloaca')
+        if not layers:
+          raise QgsProcessingException("La capa 'reclamos_cloaca' no está cargada en el proyecto.")
+        capa = layers[0]
+        
         indices_motivos = self.parameterAsEnums(parameters, self.VALORES, context)
         valores_filtrados = [self.opciones[i] for i in indices_motivos]
 
@@ -132,4 +133,5 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         
     def createInstance(self):
         return FiltroPorSmoNombreFechaYDepartamentos()
+
 
