@@ -1,7 +1,7 @@
 ##Generacion de mapas=group
 ##Mapa de calor Reclamos=name
 ##Ingrese_tu_capa_vectorial=vector
-##Tipo_de_base_map=selection OpenStreetMap;Satelital;MapaDeCalor
+##Tipo_de_base_map=selection Mapa_De_Calor;Cluster
 ##Formato_de_salida=output html
 
 library(leaflet)
@@ -26,20 +26,6 @@ Layer$latitude <- coords[, 2]
 
 # Selección del mapa base
 if (Tipo_de_base_map == 0) {
-    m <- leaflet(data = Layer) |> 
-        addTiles() |> 
-        addMarkers(
-            lng = ~longitude, lat = ~latitude,
-            label = ~as.character(get(Elija_el_campo_para_el_popup))
-        )
-} else if (Tipo_de_base_map == 1) {
-    m <- leaflet(data = Layer) |> 
-        addProviderTiles(provider = 'Esri.WorldImagery') |> 
-        addMarkers(
-            lng = ~longitude, lat = ~latitude,
-            label = ~as.character(get(Elija_el_campo_para_el_popup))
-        )
-} else if (Tipo_de_base_map == 2) {
     m <- leaflet() |> 
         addProviderTiles(provider = 'OpenStreetMap') |> 
         addHeatmap(
@@ -48,6 +34,14 @@ if (Tipo_de_base_map == 0) {
             radius = 15,
             blur = 20,
             max = 0.05
+        )
+} else if (Tipo_de_base_map == 1) {
+    m <- leaflet(data = Layer) |> 
+        addProviderTiles(provider = 'OpenStreetMap') |> 
+        addMarkers(
+            lng = ~longitude, lat = ~latitude,
+            label = ~SmoNombre,
+            clusterOptions = markerClusterOptions()
         )
 }
 
