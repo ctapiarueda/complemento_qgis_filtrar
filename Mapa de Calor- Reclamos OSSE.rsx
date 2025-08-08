@@ -1,7 +1,7 @@
 ##Generacion de mapas=group
 ##Mapa de calor Reclamos=name
 ##Ingrese_tu_capa_vectorial=vector
-##Tipo_de_base_map=selection Mapa_De_Calor;Cluster
+##Tipo_de_base_map=selection Mapa_De_Calor;Agrupador
 ##Formato_de_salida=output html
 
 library(leaflet)
@@ -17,7 +17,6 @@ Layer <- st_as_sf(Ingrese_tu_capa_vectorial,
 
 # Transformar a WGS84 (EPSG:4326)
 Layer <- st_transform(Layer, 4326)
-
 
 # Extraer coordenadas para Leaflet
 coords <- st_coordinates(Layer)
