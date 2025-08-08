@@ -73,7 +73,7 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         )
 
         self.addParameter(
-            QgsProcessingParameterFeatureSink(self.OUTPUT, 'Capa filtrada')
+            QgsProcessingParameterFeatureSink(self.OUTPUT, 'Filtro Reclamos Agua')
         )
 
     def processAlgorithm(self, parameters, context, feedback):
