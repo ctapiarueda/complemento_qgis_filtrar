@@ -112,7 +112,7 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         )
 
         for f in capa.getFeatures():
-            valor_nombre = f['Motivo']
+            valor_nombre = f['SmoNombre']
             valor_fecha = f[campo_fecha]
             valor_dep = f['DepId']
 
@@ -156,4 +156,6 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
 
     def createInstance(self):
         return FiltroPorSmoNombreFechaYDepartamentos()
+
+
 
