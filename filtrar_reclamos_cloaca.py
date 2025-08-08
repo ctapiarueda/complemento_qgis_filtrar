@@ -65,7 +65,7 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         )
 
         self.addParameter(
-            QgsProcessingParameterFeatureSink(self.OUTPUT, 'Capa filtrada')
+            QgsProcessingParameterFeatureSink(self.OUTPUT, 'Filtro Reclamos Cloaca')
         )
 
     def processAlgorithm(self, parameters, context, feedback):
@@ -113,6 +113,15 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
 
             if fecha_desde <= fecha_solo <= fecha_hasta:
                 sink.addFeature(f, QgsFeatureSink.FastInsert)
+                
+        # Renombrar la capa de salida
+        fecha_desde_str = fecha_desde.toPyDate().strftime('%Y%m%d')
+        fecha_hasta_str = fecha_hasta.toPyDate().strftime('%Y%m%d')
+        nuevo_nombre = f'cloaca_{fecha_desde_str}_{fecha_hasta_str}'
+
+        capa_resultado = QgsProject.instance().mapLayer(output_id)
+        if capa_resultado:
+            capa_resultado.setName(nuevo_nombre)
 
         return {self.OUTPUT: output_id}
 
@@ -133,5 +142,3 @@ class FiltroPorSmoNombreFechaYDepartamentos(QgsProcessingAlgorithm):
         
     def createInstance(self):
         return FiltroPorSmoNombreFechaYDepartamentos()
-
-
